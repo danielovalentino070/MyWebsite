@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRD Exam - Complete Portal</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #10b981;
+            --bg: #f8fafc;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        /* Screen Control: Hide all screens by default, show only active ones */
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+        }
+
+        /* Header Banner Styling */
+        header {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        /* Lessons Section Styling */
+        .lessons-section {
+            text-align: center;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .lessons-section h2 {
+            color: #28a745;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .container-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 300px;
+            overflow: hidden;
+            text-align: center;
+            padding-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .card h3 {
+            margin: 15px 0 10px;
+            color: #333;
+        }
+
+        .card a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 0.85rem;
+            word-break: break-all;
+            padding: 0 15px;
+            display: inline-block;
+        }
+
+        /* Main Wrapper for Form and Quiz Screens */
+        .box-wrapper {
+            max-width: 800px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            margin: 40px auto;
+            overflow: hidden;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .banner h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .content-padding {
+            padding: 30px;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Quiz Interface */
+        .question-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .question-box p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 0;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .options-list li {
+            margin-bottom: 10px;
+        }
+
+        .options-list label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .options-list label:hover {
+            background-color: #f1f5f9;
+        }
+
+        .options-list input {
+            margin-right: 12px;
+            width: auto;
+        }
+
+        #score-display {
+            margin-top: 25px;
+            padding: 20px;
+            background: #e6f4ea;
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #065f46;
+            text-align: center;
+            display: none;
+        }
+
+        /* Creator Footer */
+        .creator-info {
+            background: #f1f5f9;
+            padding: 15px 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 40px;
+        }
+        .creator-info h3 {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 1: Header and Lessons               -->
+    <!-- ========================================== -->
+    <div id="screen-1" class="screen active">
+        <header>
+            <h1>NRD EXAM</h1>
+        </header>
+
+        <div class="lessons-section">
+            <h2>LESSONS</h2>
+            <div class="container-cards">
+                <!-- Programming Card -->
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80" alt="Programming">
+                    <h3>Programming</h3>
+                    <a href="https://en.wikipedia.org/wiki/Computer_programming" target="_blank">Wikipedia Article</a>
+                </div>
+                <!-- CSS Card -->
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=600&q=80" alt="CSS">
+                    <h3>CSS</h3>
+                    <a href="https://en.wikipedia.org/wiki/CSS" target="_blank">Wikipedia Article</a>
+                </div>
+                <!-- ICT Card -->
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" alt="ICT">
+                    <h3>ICT</h3>
+                    <a href="https://en.wikipedia.org/wiki/Information_and_communications_technology" target="_blank">Wikipedia Article</a>
+                </div>
+            </div>
+
+            <!-- Button to jump to Screen 2 -->
+            <button class="btn" style="max-width: 300px; margin: 0 auto;" onclick="goToScreen(2)">Proceed to Student Sign Up</button>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SCREEN 2: Student Sign-up Form             -->
+    <!-- ========================================== -->
+    <div id="screen-2" class="screen">
+        <div class="box-wrapper">
+            <div class="banner">
+                <h1>NRD ASSESSMENT</h1>
+                <p>Step 2: Student Personal Information</p>
+            </div>
+            <div class="content-padding">
+                <form id="sign-in-form">
+                    <div class="form-group">
+                        <label for="student-name">Full Name:</label>
+                        <input type="text" id="student-name" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-section">Section:</label>
+                        <input type="text" id="student-section" required placeholder="e.g., Grade 12 TVL-ICT">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-Age">Age:</label>
+                        <input type="text" id="student-Age" required placeholder="Enter your Age">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-School Name">School Name:</label>
+                        <input type="text" id="student-School Name" required placeholder="Enter your School Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-address">Address:</label>
+                        <input type="text" id="student-address" required placeholder="Enter your address">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-country">Country:</label>
+                        <input type="text" id="student-country" required placeholder="Enter your country">
+                    </div>
+                    <div class="form-group">
+                        <label for="Other">Other:</label>
+                        <input type="text" id="Other">
+                    </div>
+                    <div class="form-group">
+                        <label for="quiz-select">Take Quiz:</label>
+                        <select id="quiz-select">
+                            <option value="all">Answer ICT, CSS, PROGRAMMING 100 Question</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Proceed to Assessment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SCREEN 3: Assessment / Quiz                -->
+    <!-- ========================================== -->
+    <div id="screen-3" class="screen">
+        <div class="box-wrapper">
+            <div class="banner">
+                <h1 id="quiz-heading">Assessment Questions</h1>
+                <p>Answer all questions carefully</p>
+            </div>
+            <div class="content-padding">
+                <form id="quiz-form">
+                    <div id="questions-container"></div>
+                    <button type="submit" class="btn">Submit Answers & Calculate Score</button>
+                </form>
+                <div id="score-display"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Project Owners Footer -->
+    <div class="creator-info">
+        <h3>Project Owners</h3>
+        <p>Danielo D. Valentino | Rolan Resuena | Nathaniel Bacalan</p>
+        <p>Grade 12 TVL-ICT [Empowerment Technology]</p>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC                           -->
+    <!-- ========================================== -->
+    <script>
+        // Full 100+ Questions Data Bank
+        const allQuestions = {
+            css: [
+                {q: "What does CSS stand for?", options: ["Computer Style Sheets", "Cascading Style Sheets", "Creative Style Sheets", "Colorful Style Sheets"], answer: 1},
+                {q: "Which HTML attribute is used to define inline styles?", options: ["styles", "font", "style", "class"], answer: 2},
+                {q: "Which is the correct CSS syntax?", options: ["body {color: black;}", "{body:color=black;}", "body:color=black;", "{body;color:black;}"], answer: 0},
+                {q: "How do you insert a comment in a CSS file?", options: ["// this is a comment", "/* this is a comment */", "' this is a comment", "<!-- this is a comment -->"], answer: 1},
+                {q: "Which property is used to change the background color?", options: ["color", "bg-color", "background-color", "bgcolor"], answer: 2},
+                {q: "How do you add a background color for all <h1> elements?", options: ["all.h1 {background-color: #FFFFFF;}", "h1.all {background-color: #FFFFFF;}", "h1 {background-color: #FFFFFF;}", "background.h1 {background-color: #FFFFFF;}"], answer: 2},
+                {q: "Which CSS property is used to change the text color of an element?", options: ["text-color", "color", "font-color", "fg-color"], answer: 1},
+                {q: "Which CSS property controls the text size?", options: ["font-style", "text-size", "font-size", "text-style"], answer: 2},
+                {q: "What is the correct CSS syntax for making all the <p> elements bold?", options: ["p {font-weight: bold;}", "p {text-weight: bold;}", "<p style='font-weight: bold;'>", "p {font: bold;}"], answer: 0},
+                {q: "How do you display hyperlinks without an underline?", options: ["a {text-decoration: none;}", "a {text-decoration: no-underline;}", "a {underline: none;}", "a {decoration: none;}"], answer: 0},
+                {q: "How do you make each word in a text start with a capital letter?", options: ["text-transform: capitalize;", "text-transform: uppercase;", "transform: capitalize;", "you can't do that in CSS"], answer: 0},
+                {q: "Which property is used to change the font of an element?", options: ["font-family", "font-style", "font-weight", "font-variant"], answer: 0},
+                {q: "How do you make a list that lists its items with squares?", options: ["list-style-type: square;", "list: square;", "list-type: square;", "list-style: square;"], answer: 0},
+                {q: "How do you select an element with id 'demo'?", options: [".demo", "#demo", "*demo", "demo"], answer: 1},
+                {q: "How do you select elements with class name 'test'?", options: ["#test", ".test", "*test", "test"], answer: 1},
+                {q: "What is the default value of the position property?", options: ["relative", "fixed", "absolute", "static"], answer: 3},
+                {q: "Which CSS property is used to specify the space between the content and its border?", options: ["padding", "margin", "spacing", "border-spacing"], answer: 0},
+                {q: "Which CSS property is used to create space outside the border?", options: ["spacing", "margin", "padding", "offset"], answer: 1},
+                {q: "How do you make a website responsive for different screen sizes?", options: ["Media Queries", "JavaScript loops", "HTML frames", "CSS selectors"], answer: 0},
+                {q: "Which property is used to center text horizontally?", options: ["align", "text-align", "center-text", "horizontal-align"], answer: 1},
+                {q: "What does 'float: left;' do?", options: ["Centers an element", "Moves element to the left of its container", "Deletes the element", "Hides the element"], answer: 1},
+                {q: "Which CSS property sets the stacking order of elements?", options: ["layer-index", "z-index", "stack-order", "element-index"], answer: 1},
+                {q: "How do you round the corners of an element using CSS?", options: ["corner-radius", "border-radius", "curve-border", "round-edge"], answer: 1},
+                {q: "Which CSS property specifies the transparency of an element?", options: ["opacity", "transparency", "filter", "visibility"], answer: 0},
+                {q: "What is the correct way to select all paragraphs inside a div?", options: ["div p", "div > p", "p div", "div.p"], answer: 0},
+                {q: "Which pseudo-class is triggered when a user hovers over an element?", options: [":active", ":hover", ":focus", ":link"], answer: 1},
+                {q: "Which CSS property controls the shadow effect of an element's box?", options: ["shadow-box", "box-shadow", "element-shadow", "drop-shadow"], answer: 1},
+                {q: "How do you make a flex container in CSS?", options: ["display: block;", "display: flex;", "display: grid;", "display: box;"], answer: 1},
+                {q: "Which property is used in Flexbox to align items along the main axis?", options: ["align-items", "justify-content", "flex-direction", "align-content"], answer: 1},
+                {q: "What unit is relative to the font-size of the root element?", options: ["em", "rem", "px", "%"], answer: 1},
+                {q: "Which property controls the width of an element's border?", options: ["border-width", "border-size", "border-thickness", "border-style"], answer: 0},
+                {q: "How do you hide an HTML element using CSS?", options: ["display: none;", "visibility: hidden;", "Both A and B", "opacity: 0 only"], answer: 2},
+                {q: "Which CSS property changes the mouse cursor icon when hovered?", options: ["mouse", "pointer", "cursor", "hover-style"], answer: 2}
+            ],
+            programming: [
+                {q: "What is a variable in programming?", options: ["A storage location with a name", "A fixed number that never changes", "A physical hardware component", "A type of syntax error"], answer: 0},
+                {q: "Which of the following is a strongly-typed compiled programming language?", options: ["Python", "JavaScript", "C++", "HTML"], answer: 2},
+                {q: "What symbol is commonly used to assign values to variables in many languages?", options: ["==", "=", ":", "->"], answer: 1},
+                {q: "Which data type represents true or false values?", options: ["Integer", "String", "Boolean", "Float"], answer: 2},
+                {q: "What is an array?", options: ["A single variable holding multiple values", "A loop structure", "A conditional statement", "A database query"], answer: 0},
+                {q: "Which loop runs a block of code as long as a specified condition is true?", options: ["for loop", "while loop", "switch loop", "case loop"], answer: 1},
+                {q: "What is the extension of a Python source file?", options: [".pt", ".py", ".html", ".js"], answer: 1},
+                {q: "Which function is used to print output to the console in JavaScript?", options: ["print()", "echo()", "console.log()", "printf()"], answer: 2},
+                {q: "What does IDE stand for in programming?", options: ["Integrated Development Environment", "Internal Design Engine", "Interactive Data Execution", "Internet Development Element"], answer: 0},
+                {q: "Which keyword is used to define a function in JavaScript?", options: ["func", "def", "function", "lambda"], answer: 2},
+                {q: "What is debugging?", options: ["Writing code faster", "Finding and fixing errors in code", "Compiling software", "Designing user interfaces"], answer: 1},
+                {q: "What is the result of 10 % 3 in programming?", options: ["3.33", "1", "10", "3"], answer: 1},
+                {q: "Which conditional statement is used to execute different blocks of code based on multiple conditions?", options: ["if-else", "for", "try-catch", "break"], answer: 0},
+                {q: "What does OOP stand for?", options: ["Object-Oriented Programming", "Online Operational Procedure", "Ordered Output Processing", "Open Object Protocol"], answer: 0},
+                {q: "Which of the following is an example of an open-source programming language created by Guido van Rossum?", options: ["Java", "Python", "C#", "Swift"], answer: 1},
+                {q: "What is recursion?", options: ["A function calling itself", "An endless loop", "A type of error", "A variable type"], answer: 0},
+                {q: "What is a string in programming?", options: ["A sequence of characters", "A list of numbers", "A true/false value", "A decimal number"], answer: 0},
+                {q: "Which operator means 'not equal to' in most programming languages?", options: ["!=", "==", "!==", "<>"], answer: 0},
+                {q: "What is the index of the first item in a standard zero-indexed array?", options: ["1", "0", "-1", "Depends on the language"], answer: 1},
+                {q: "Which programming language is primarily used for iOS app development?", options: ["Swift", "Kotlin", "PHP", "C"], answer: 0},
+                {q: "What is a syntax error?", options: ["An error in program logic", "An error caused by breaking grammar rules of the language", "An error when a server goes down", "An arithmetic overflow"], answer: 1},
+                {q: "Which statement is used to exit out of a loop early?", options: ["stop", "exit", "break", "return"], answer: 2},
+                {q: "What is source code?", options: ["The compiled binary file", "Human-readable instructions written by a programmer", "The database schema", "The computer motherboard"], answer: 1},
+                {q: "What does HTML stand for?", options: ["Hyper Text Markup Language", "High Tech Multi Language", "Hyperlinks and Text Management Language", "Home Tool Markup Language"], answer: 0},
+                {q: "Which component stores data permanently in software applications?", options: ["RAM", "CPU", "Database", "Cache"], answer: 2},
+                {q: "What is an algorithm?", options: ["A step-by-step set of instructions to solve a problem", "A type of computer virus", "A graphic design layout", "A network cable"], answer: 0},
+                {q: "Which keyword is used to handle exceptions/errors in programming?", options: ["try-catch", "if-else", "do-while", "open-close"], answer: 0},
+                {q: "What is the purpose of comments in code?", options: ["To slow down the program", "To explain code to humans", "To execute faster", "To encrypt data"], answer: 1},
+                {q: "Which data structure operates on a Last-In, First-Out (LIFO) basis?", options: ["Queue", "Stack", "Tree", "Graph"], answer: 1},
+                {q: "What is an API?", options: ["Application Programming Interface", "Advanced Program Integration", "Automated Process Internet", "Application Protocol Index"], answer: 0},
+                {q: "Which company developed the Java programming language?", options: ["Sun Microsystems", "Microsoft", "Apple", "IBM"], answer: 0},
+                {q: "What is a constant?", options: ["A variable whose value cannot change after initialization", "An infinite loop", "A random number generator", "A floating-point decimal"], answer: 0},
+                {q: "Which logic gate returns true only if both inputs are true?", options: ["OR", "AND", "NOT", "XOR"], answer: 1}
+            ],
+            ict: [
+                {q: "What does ICT stand for?", options: ["Information and Communication Technology", "Internal Computer Transmission", "International Circuit Telecommunication", "Information Core Transfer"], answer: 0},
+                {q: "Which device is considered the 'brain' of the computer?", options: ["GPU", "RAM", "CPU", "Hard Drive"], answer: 2},
+                {q: "What type of memory is volatile and loses data when power is turned off?", options: ["ROM", "RAM", "SSD", "Flash Drive"], answer: 1},
+                {q: "What does LAN stand for?", options: ["Local Area Network", "Large Access Node", "Logical Area Network", "Line Audio Network"], answer: 0},
+                {q: "Which of the following is an input device?", options: ["Monitor", "Printer", "Keyboard", "Speaker"], answer: 2},
+                {q: "What is the main function of an operating system?", options: ["To browse the web", "To manage computer hardware and software resources", "To create documents", "To protect against viruses"], answer: 1},
+                {q: "What does WWW stand for?", options: ["World Wide Web", "Wide World Web", "Web World Wide", "World Wide Wireless"], answer: 0},
+                {q: "Which protocol is securely used for browsing websites over the internet?", options: ["HTTP", "FTP", "HTTPS", "SMTP"], answer: 2},
+                {q: "What is malware?", options: ["A protective security tool", "Malicious software designed to harm or exploit systems", "A hardware component", "An operating system"], answer: 1},
+                {q: "Which storage device uses magnetic disks to read and write data?", options: ["SSD", "HDD", "RAM", "ROM"], answer: 1},
+                {q: "What does IP stand for in networking?", options: ["Internal Process", "Internet Protocol", "Information Provider", "Instant Packet"], answer: 1},
+                {q: "Which tool is commonly used for spreadsheet calculations?", options: ["Microsoft Word", "Microsoft Excel", "Adobe Photoshop", "Microsoft PowerPoint"], answer: 1},
+                {q: "What is cloud computing?", options: ["Computing done inside weather balloons", "Storing and accessing data over the internet instead of a local drive", "A computer virus", "Processing data offline"], answer: 1},
+                {q: "What does Wi-Fi stand for?", options: ["Wireless Fidelity", "Wide Field", "Wired Finder", "Wave Filter"], answer: 0},
+                {q: "Which network device connects multiple networks together, such as home networks to the internet?", options: ["Switch", "Router", "Hub", "Repeater"], answer: 1},
+                {q: "What is phishing?", options: ["A sport catching fish", "A cyberattack using fake communications to steal sensitive data", "Optimizing network speed", "A programming method"], answer: 1},
+                {q: "What unit is used to measure processor clock speed?", options: ["Bytes", "Hertz (GHz)", "Volts", "Pixels"], answer: 1},
+                {q: "Which of the following is an example of System Software?", options: ["Microsoft Word", "Windows 11", "Google Chrome", "Adobe Photoshop"], answer: 1},
+                {q: "What is open-source software?", options: ["Software whose source code is freely available to modify and share", "Software that costs money", "Software that cannot be edited", "Software without an interface"], answer: 0},
+                {q: "What does URL stand for?", options: ["Uniform Resource Locator", "Universal Record Link", "Uniform Retrieval Line", "Unified Router Locator"], answer: 0},
+                {q: "Which cable is commonly used for high-speed wired Ethernet networks?", options: ["Coaxial cable", "Fiber optic / Twisted pair (Cat5e/Cat6)", "HDMI cable", "VGA cable"], answer: 1},
+                {q: "What is the primary function of a firewall?", options: ["To cool down the CPU", "To monitor and filter network traffic based on security rules", "To speed up internet downloads", "To increase storage capacity"], answer: 1},
+                {q: "What does PDF stand for?", options: ["Portable Document Format", "Personal Data File", "Printed Digital Form", "Public Document Folder"], answer: 0},
+                {q: "Which company created the Windows operating system?", options: ["Apple", "Microsoft", "Google", "IBM"], answer: 1},
+                {q: "What is the purpose of an email client's BCC field?", options: ["To send carbon copies visible to everyone", "To send blind carbon copies hidden from other recipients", "To attach files", "To block spam"], answer: 1},
+                {q: "What does USB stand for?", options: ["Universal Serial Bus", "United System Board", "Universal Secure Bridge", "Ultra Speed Binary"], answer: 0},
+                {q: "Which topology connects all devices to a central switch or hub?", options: ["Bus topology", "Ring topology", "Star topology", "Mesh topology"], answer: 2},
+                {q: "What is data encryption?", options: ["Deleting corrupted data", "Converting data into a secure code to prevent unauthorized access", "Compressing files to save space", "Backing up data to the cloud"], answer: 1},
+                {q: "What is a spreadsheet cell?", options: ["An intersection of a row and a column", "A database table", "A macro function", "A presentation slide"], answer: 0},
+                {q: "What does GUI stand for?", options: ["Graphical User Interface", "General Universal Interaction", "Global Utility Integration", "Graphic Unit Integration"], answer: 0},
+                {q: "What is a computer virus?", options: ["A biological illness affecting hardware", "A self-replicating program that spreads by inserting copies into other programs", "A broken cable", "An overheating component"], answer: 1},
+                {q: "Which device converts digital computer signals into analog signals for telephone lines?", options: ["Router", "Modem", "Switch", "Hub"], answer: 1},
+                {q: "What is empowerment technology?", options: ["Using ICT tools to empower individuals and communities through digital literacy", "A video game genre", "A computer repair technique", "An old mainframe computer system"], answer: 0},
+                {q: "What is the standard binary base used in computer processing?", options: ["Base 2 (0 and 1)", "Base 10", "Base 16", "Base 8"], answer: 0}
+            ]
+        };
+
+        let currentStudent = {};
+        let activeQuizQuestions = [];
+
+        // Function to switch between screens cleanly
+        function goToScreen(screenNumber) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(`screen-${screenNumber}`).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Handle Screen 2 Form Submission -> Move to Screen 3
+        document.getElementById('sign-in-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            currentStudent.name = document.getElementById('student-name').value;
+            currentStudent.section = document.getElementById('student-section').value;
+            const category = document.getElementById('quiz-select').value;
+
+            // Update quiz title heading
+            document.getElementById('quiz-heading').innerText = `Assessment for ${currentStudent.name} (${currentStudent.section})`;
+
+            // Load questions based on category choice
+            loadQuiz(category);
+
+            // Switch to Screen 3
+            goToScreen(3);
+        });
+
+        // Function to build question HTML dynamically
+        function loadQuiz(category) {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            if (category === 'all') {
+                activeQuizQuestions = [...allQuestions.css, ...allQuestions.programming, ...allQuestions.ict];
+            } else {
+                activeQuizQuestions = allQuestions[category];
+            }
+
+            activeQuizQuestions.forEach((item, index) => {
+                let optionsHtml = '';
+                item.options.forEach((opt, optIndex) => {
+                    optionsHtml += `
+                        <li>
+                            <label>
+                                <input type="radio" name="q${index}" value="${optIndex}" required>
+                                ${opt}
+                            </label>
+                        </li>
+                    `;
+                });
+
+                container.innerHTML += `
+                    <div class="question-box">
+                        <p>${index + 1}. ${item.q}</p>
+                        <ul class="options-list">${optionsHtml}</ul>
+                    </div>
+                `;
+            });
+        }
+
+        // Handle Screen 3 Quiz Submission & Score Calculation
+        document.getElementById('quiz-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let score = 0;
+
+            activeQuizQuestions.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selected && parseInt(selected.value) === item.answer) {
+                    score++;
+                }
+            });
+
+            const percentage = ((score / activeQuizQuestions.length) * 100).toFixed(2);
+            const scoreDisplay = document.getElementById('score-display');
+            scoreDisplay.style.display = 'block';
+            scoreDisplay.innerHTML = `🎉 Great job, ${currentStudent.name}! Your Score: ${score} / ${activeQuizQuestions.length} (${percentage}%)`;
+            scoreDisplay.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
